@@ -1,0 +1,4 @@
+node_modules
+.env
+sandbox/node_modules
+sandbox/coverage
