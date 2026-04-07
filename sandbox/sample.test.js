@@ -1,43 +1,21 @@
 const login = require("./sample").login;
 
-describe("login function", () => {
-  test("should return success message for valid credentials", () => {
-    const result = login("admin@test.com", "123456");
-    expect(result).toEqual({
-      success: true,
-      message: "Login successful"
-    });
-  });
+test('should return Login Successful for correct username and password', () => {
+    expect(login("admin", "1234")).toBe("Login Successful");
+});
 
-  test("should return error message for invalid email", () => {
-    const result = login("invalid@test.com", "123456");
-    expect(result).toEqual({
-      success: false,
-      message: "Invalid credentials"
-    });
-  });
+test('should return Invalid Username or Password for incorrect username', () => {
+    expect(login("user", "1234")).toBe("Invalid Username or Password");
+});
 
-  test("should return error message for invalid password", () => {
-    const result = login("admin@test.com", "wrongPassword");
-    expect(result).toEqual({
-      success: false,
-      message: "Invalid credentials"
-    });
-  });
+test('should return Invalid Username or Password for incorrect password', () => {
+    expect(login("admin", "pass")).toBe("Invalid Username or Password");
+});
 
-  test("should return error message for missing email", () => {
-    const result = login("", "123456");
-    expect(result).toEqual({
-      success: false,
-      message: "Email and password are required"
-    });
-  });
+test('should return Invalid Username or Password for both incorrect username and password', () => {
+    expect(login("user", "pass")).toBe("Invalid Username or Password");
+});
 
-  test("should return error message for missing password", () => {
-    const result = login("admin@test.com", "");
-    expect(result).toEqual({
-      success: false,
-      message: "Email and password are required"
-    });
-  });
+test('should handle empty strings as invalid input', () => {
+    expect(login("", "")).toBe("Invalid Username or Password");
 });

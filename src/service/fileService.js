@@ -11,14 +11,24 @@ function ensureSandboxExists() {
   }
 }
 
+function stripCodeFence(code = "") {
+  return code
+    .replace(/^```[a-zA-Z]*\s*/, "")
+    .replace(/\s*```$/, "")
+    .trim();
+}
+
 function writeSourceFile(functionCode) {
   ensureSandboxExists();
   fs.writeFileSync(sourceFilePath, functionCode, "utf8");
+  return sourceFilePath;
 }
 
 function writeTestFile(testCode) {
   ensureSandboxExists();
-  fs.writeFileSync(testFilePath, testCode, "utf8");
+  const cleanCode = stripCodeFence(testCode);
+  fs.writeFileSync(testFilePath, cleanCode, "utf8");
+  return testFilePath;
 }
 
 module.exports = {

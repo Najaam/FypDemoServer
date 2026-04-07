@@ -21,24 +21,30 @@ async function generateTests(req, res) {
       });
     }
 
-    writeSourceFile(functionCode);
-    console.log("2. Source file written");
+    const sourceFilePath = writeSourceFile(functionCode);
+    console.log("2. Source file written:", sourceFilePath);
 
     const aiResult = await generateJestTests(functionName, functionCode);
     console.log("3. Ollama response received");
 
-    const generatedTestCode = aiResult.testFileContent;
+    if (!aiResult || !aiResult.testFileContent) {
+      return res.status(500).json({
+        success: false,
+        message: "AI did not return valid test content"
+      });
+    }
 
-    writeTestFile(generatedTestCode);
-    console.log("4. Test file written");
+    const generatedTestCode = aiResult.testFileContent;
+    const testFilePath = writeTestFile(generatedTestCode);
+    console.log("4. Test file written:", testFilePath);
 
     let testResult = null;
     let passPercentage = 0;
-    let decision = "MANUAL_REVIEW";
+    let decision = "NOT_RUN";
 
     if (runTests) {
-      console.log("5. Running Jest...");
-      testResult = await runJestTests();
+      console.log("5. Running Jest on:", testFilePath);
+      testResult = await runJestTests(testFilePath);
       console.log("6. Jest finished");
 
       if (testResult.total > 0) {
@@ -53,6 +59,8 @@ async function generateTests(req, res) {
       message: "Tests generated successfully",
       data: {
         functionName,
+        sourceFilePath,
+        testFilePath,
         generatedTestCode,
         testResult,
         passPercentage,

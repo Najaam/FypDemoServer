@@ -1,25 +1,12 @@
-function login(email, password) {
-  const validEmail = "admin@test.com";
-  const validPassword = "123456";
+function login(username, password) {
+    const correctUsername = "admin";
+    const correctPassword = "1234";
 
-  if (!email || !password) {
-    return {
-      success: false,
-      message: "Email and password are required"
-    };
-  }
-
-  if (email === validEmail && password === validPassword) {
-    return {
-      success: true,
-      message: "Login successful"
-    };
-  }
-
-  return {
-    success: false,
-    message: "Invalid credentials"
-  };
+    if (username === correctUsername && password === correctPassword) {
+        return "Login Successful";
+    } else {
+        return "Invalid Username or Password";
+    }
 }
 
 module.exports = { login };
